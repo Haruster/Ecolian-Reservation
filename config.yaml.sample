@@ -1,0 +1,37 @@
+urls:
+  login: [url for login]
+  selectDate: [url for select date]
+
+driver: [url for webDriver]
+
+selectors:
+  login:
+    id:
+      id: [id of login input]
+    password:
+      id: [id of password input]
+    button:
+      id: [id of login button]
+  date:
+    class: [class name for reserve date]
+  time:
+    class: [class name for reserve time]
+  time_table:
+    class: [class name for reservation time table]
+  check_agreement_private_info:
+    id: [id for agreement private info]
+  reservation_submit:
+    id: [id for reservation submit]
+
+values:
+  login:
+    id: [id]
+    password: [password]
+  reservation:
+    hole: [18홀 | 9홀]
+    from: [00:00]
+    to: [12:00]
+  guests:
+    guest2: [홍길동]
+    guest3: [김철수]
+    guest4: [박영희]
