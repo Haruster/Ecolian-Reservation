@@ -26,3 +26,9 @@ def find_day_position(date: datetime):
     else:
         origin = first_day + timedelta(days=6 - first_day.weekday())
     return (date - origin).days // 7 + 1, (date.weekday() + 1) % 7 + 1
+
+
+def time2int(time_str: str) -> int:
+    if ":" not in time_str:
+        return int(time_str)
+    return int("".join(time_str.split(":")))

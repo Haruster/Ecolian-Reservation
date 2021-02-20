@@ -71,23 +71,6 @@ class Reservation(FunctionContainer):
         except Exception as e:
             print("Select time Exception: ", e)
 
-    def select_time_in_reservation_table(self, reservation_times):
-        """
-        예약 테이블에서 설정해놓은 가능한 시간 중 한 곳의 예약 화면으로 이동한다.
-        :param reservation_times: List<WebElement>, 예약 가능한 시간표
-        """
-        for reservation_time in reservation_times:
-            _reservation_info = self.config['values']['reservation']
-            if reservation_time.get_attribute("hole") != _reservation_info['hole'] or \
-                    not tim2int(_reservation_info['from']) <= tim2int(reservation_time.get_attribute("time")) < tim2int(
-                        _reservation_info['to']):
-                print("pass", reservation_time.get_attribute("time"), reservation_time.get_attribute("hole"))
-                continue
-            reservation_time.click()
-            self.alert_confirm()
-            if not self.alert_confirm():
-                print(reservation_time.get_attribute("time"), reservation_time.get_attribute("hole"), "예약을 시작합니다.")
-
     def wait_for_timetable(self):
         """
         예약 가능 시간표가 로딩될 때까지 기다린다.
@@ -100,13 +83,31 @@ class Reservation(FunctionContainer):
             self.set_wait_time(is_max=False)
         return timetable_el
 
+    def select_time_in_reservation_table(self, reservation_times):
+        """
+        예약 테이블에서 설정해놓은 가능한 시간 중 한 곳의 예약 화면으로 이동한다.
+        :param reservation_times: List<WebElement>, 예약 가능한 시간표
+        """
+        for reservation_time in reservation_times:
+            print(reservation_time)
+            _reservation_info = self.config['values']['reservation']
+            if reservation_time.get_attribute("hole") != _reservation_info['hole'] or \
+                    not time2int(_reservation_info['from']) <= time2int(reservation_time.get_attribute("time")) <= time2int(
+                        _reservation_info['to']):
+                print("pass", reservation_time.get_attribute("time"), reservation_time.get_attribute("hole"))
+                continue
+            reservation_time.click()
+            self.alert_confirm()
+            if not self.alert_confirm():
+                print(reservation_time.get_attribute("time"), reservation_time.get_attribute("hole"), "예약을 시작합니다.")
+
     def insert_reservation_info(self):
         """
         동반자 입력, 개인정보 필수 수집 동의
         """
         for i in range(2, 5):
             names_selector = "#frm1 > table > tbody > tr:nth-child(6) > td > input:nth-child({})".format(i)
-            name_el: WebElement = self.wait.until(EC.presence_of_element_located((By.SS_SELECTOR, names_selector)))
+            name_el: WebElement = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, names_selector)))
             name_el.send_keys(self.config["guests"]["guest{}".format(i)])
         self.driver.find_element_by_id(self.config['selectors']['check_agreement_private_info']['id']).click()  # 개인정보 필수 수집 동의
         time.sleep(2)
